@@ -1,2 +1,8 @@
 ---
+# This file is part of the Wazuh Ansible project.
+# This project is licensed under the GNU General Public License v3.0.
+# See the LICENSE file for details.
 # no defaults
+
+# Path to your cloned wazuh-docker repo
+wazuh_repo_dest: /opt/wazuh-docker/single-node/
