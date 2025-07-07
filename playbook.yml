@@ -5,7 +5,7 @@
   gather_facts: false
 
   collections:
-    - community.docker
+    - cdocker.docker_compose_v2
 
   roles:
     - clone_wazuh_docker
