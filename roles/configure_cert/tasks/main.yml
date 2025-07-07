@@ -1,0 +1,18 @@
+---
+- name: Create certificate directory
+  ansible.builtin.file:
+    path: "{{ cert_dest_dir }}"
+    state: directory
+    mode: '0755'
+
+- name: Deploy Cloudflare Origin CA certificate
+  ansible.builtin.copy:
+    dest: "{{ cert_dest_dir }}/origin.pem"
+    content: "{{ cloudflare_origin_cert }}"
+    mode: '0644'
+
+- name: Deploy Cloudflare Origin CA private key
+  ansible.builtin.copy:
+    dest: "{{ cert_dest_dir }}/origin-key.pem"
+    content: "{{ cloudflare_origin_key }}"
+    mode: '0600'

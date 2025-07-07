@@ -1,0 +1,5 @@
+# Ansible Vault file for Cloudflare Origin CA certificate and key
+cloudflare_origin_cert: |
+  YOUR_ORIGIN_CERT_PEM_CONTENT
+cloudflare_origin_key: |
+  YOUR_ORIGIN_KEY_PEM_CONTENT

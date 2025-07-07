@@ -1,0 +1,22 @@
+---
+- name: Clone Wazuh Docker repository
+  ansible.builtin.git:
+    repo: "{{ wazuh_repo_url }}"
+    version: "{{ wazuh_repo_version }}"
+    dest: "{{ wazuh_repo_dest }}"
+    force: yes
+
+- name: Ensure Docker and Docker Compose are installed
+  become: yes
+  ansible.builtin.package:
+    name:
+      - docker.io
+      - docker-compose
+    state: present
+
+- name: Start and enable Docker service
+  become: yes
+  ansible.builtin.service:
+    name: docker
+    state: started
+    enabled: yes

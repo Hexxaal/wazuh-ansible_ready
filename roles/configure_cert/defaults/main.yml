@@ -1,0 +1,2 @@
+---
+cert_dest_dir: "{{ wazuh_repo_dest }}/certs"

@@ -1,0 +1,5 @@
+---
+- name: Launch Wazuh Docker stack
+  community.docker.docker_compose:
+    project_src: "{{ wazuh_repo_dest }}"
+    state: present

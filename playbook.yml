@@ -1,0 +1,13 @@
+---
+- name: Deploy Wazuh Docker single node with Cloudflare certificate
+  hosts: localhost
+  connection: local
+  gather_facts: false
+
+  collections:
+    - community.docker
+
+  roles:
+    - clone_wazuh_docker
+    - configure_cert
+    - deploy

@@ -1,0 +1,4 @@
+---
+wazuh_repo_url: https://github.com/wazuh/wazuh-docker.git
+wazuh_repo_version: v4.12.0
+wazuh_repo_dest: /opt/wazuh-docker
