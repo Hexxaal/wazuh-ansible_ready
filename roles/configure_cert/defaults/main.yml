@@ -1,2 +1,9 @@
 ---
-cert_dest_dir: "{{ wazuh_repo_dest }}/certs"
+# Path to your cloned wazuh-docker repo
+wazuh_repo_dest: /opt/wazuh-docker
+
+# Sub-directory for the single-node compose
+wazuh_compose_dir: "{{ wazuh_repo_dest }}/single-node"
+
+# Where the dashboard certs live under single-node
+cert_dest_dir: "{{ wazuh_compose_dir }}/config/wazuh_indexer_ssl_certs"
