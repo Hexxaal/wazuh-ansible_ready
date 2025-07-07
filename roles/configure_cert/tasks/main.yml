@@ -7,12 +7,17 @@
 
 - name: Deploy Cloudflare Origin CA certificate
   ansible.builtin.copy:
+    src: origin.pem
     dest: "{{ cert_dest_dir }}/origin.pem"
-    content: "{{ cloudflare_origin_cert }}"
     mode: '0644'
+  delegate_to: localhost
+  run_once: true
 
 - name: Deploy Cloudflare Origin CA private key
   ansible.builtin.copy:
+    src: origin-key.pem
     dest: "{{ cert_dest_dir }}/origin-key.pem"
-    content: "{{ cloudflare_origin_key }}"
     mode: '0600'
+  delegate_to: localhost
+  run_once: true
+
