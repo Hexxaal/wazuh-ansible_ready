@@ -21,9 +21,9 @@
         privatekey_path: "{{ cert_dest_dir }}/wazuh.dashboard-key.pem"
         provider: selfsigned
 
-        # validity window
-        selfsigned_not_before: "now"
-        selfsigned_not_after: "{{ lookup('pipe', 'date -d \"+' + self_signed.cert_validity_days|string + ' days\" -Iseconds') }}"
+        # validity window in relative format
+        selfsigned_not_before: "+0s"
+        selfsigned_not_after:  "+{{ self_signed.cert_validity_days }}d"
 
         # X.509 v3 and digest
         selfsigned_version: 3
