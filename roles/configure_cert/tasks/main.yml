@@ -14,6 +14,8 @@
         size: "{{ self_signed.key_size }}"
         type: RSA
         mode: '0600'
+      delegate_to: localhost
+      run_once: true
 
     - name: Generate self-signed dashboard certificate
       community.crypto.x509_certificate:
@@ -25,9 +27,9 @@
         selfsigned_not_before: "+0s"
         selfsigned_not_after:  "+{{ self_signed.cert_validity_days }}d"
 
-        # X.509 v3 and digest
-        selfsigned_version: 3
-        selfsigned_digest: sha256
+        # certificate settings
+        selfsigned_version:  3
+        selfsigned_digest:   sha256
 
         # Distinguished Name attributes
         attributes:
@@ -37,22 +39,32 @@
           localityName:          "{{ self_signed.locality }}"
           organizationName:      "{{ self_signed.organization }}"
           organizationalUnitName: "{{ self_signed.organizational_unit }}"
+
+        # skip chattr/atomic operations
+        unsafe_writes: true
+
+        # ensure ownership & permissions
+        owner: root
+        group: root
         mode: '0644'
-  when: use_self_signed_cert | bool
-  delegate_to: localhost
-  run_once: true
+      delegate_to: localhost
+      run_once: true
 
 - block:
     - name: Deploy Cloudflare Origin CA cert
       ansible.builtin.copy:
         src: origin.pem
         dest: "{{ cert_dest_dir }}/wazuh.dashboard.pem"
+        owner: root
+        group: root
         mode: '0644'
 
     - name: Deploy Cloudflare Origin CA key
       ansible.builtin.copy:
         src: origin-key.pem
         dest: "{{ cert_dest_dir }}/wazuh.dashboard-key.pem"
+        owner: root
+        group: root
         mode: '0600'
   when: not use_self_signed_cert | bool
   delegate_to: localhost
