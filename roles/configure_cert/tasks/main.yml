@@ -7,48 +7,29 @@
   delegate_to: localhost
   run_once: true
 
-- block:
-    - name: Generate private key for self-signed cert
-      community.crypto.openssl_privatekey:
-        path: "{{ cert_dest_dir }}/wazuh.dashboard-key.pem"
-        size: "{{ self_signed.key_size }}"
-        type: RSA
-        mode: '0600'
-      delegate_to: localhost
-      run_once: true
+- name: Generate private key for self-signed cert
+  ansible.builtin.command: >
+    openssl genpkey
+      -algorithm RSA
+      -out "{{ cert_dest_dir }}/wazuh.dashboard-key.pem"
+      -pkeyopt rsa_keygen_bits:{{ self_signed.key_size }}
+  args:
+    creates: "{{ cert_dest_dir }}/wazuh.dashboard-key.pem"
+  delegate_to: localhost
+  run_once: true
 
-    - name: Generate self-signed dashboard certificate
-      community.crypto.x509_certificate:
-        path: "{{ cert_dest_dir }}/wazuh.dashboard.pem"
-        privatekey_path: "{{ cert_dest_dir }}/wazuh.dashboard-key.pem"
-        provider: selfsigned
-
-        # validity window in relative format
-        selfsigned_not_before: "+0s"
-        selfsigned_not_after:  "+{{ self_signed.cert_validity_days }}d"
-
-        # certificate settings
-        selfsigned_version:  3
-        selfsigned_digest:   sha256
-
-        # Distinguished Name attributes
-        attributes:
-          commonName:            "{{ self_signed.common_name }}"
-          countryName:           "{{ self_signed.country }}"
-          stateOrProvinceName:   "{{ self_signed.state }}"
-          localityName:          "{{ self_signed.locality }}"
-          organizationName:      "{{ self_signed.organization }}"
-          organizationalUnitName: "{{ self_signed.organizational_unit }}"
-
-        # skip chattr/atomic operations
-        unsafe_writes: true
-
-        # ensure ownership & permissions
-        owner: root
-        group: root
-        mode: '0644'
-      delegate_to: localhost
-      run_once: true
+- name: Generate self-signed dashboard certificate
+  ansible.builtin.command: >
+    openssl req -x509 -new -nodes
+      -key "{{ cert_dest_dir }}/wazuh.dashboard-key.pem"
+      -sha256
+      -days {{ self_signed.cert_validity_days }}
+      -out "{{ cert_dest_dir }}/wazuh.dashboard.pem"
+      -subj "/C={{ self_signed.country }}/ST={{ self_signed.state }}/L={{ self_signed.locality }}/O={{ self_signed.organization }}/OU={{ self_signed.organizational_unit }}/CN={{ self_signed.common_name }}"
+  args:
+    creates: "{{ cert_dest_dir }}/wazuh.dashboard.pem"
+  delegate_to: localhost
+  run_once: true
 
 - block:
     - name: Deploy Cloudflare Origin CA cert
@@ -76,4 +57,5 @@
     chdir: "{{ wazuh_compose_dir }}"
   args:
     creates: "{{ cert_dest_dir }}/root-ca.pem"
+  delegate_to: localhost
   run_once: true
