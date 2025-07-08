@@ -1,9 +1,19 @@
 ---
-# Path to your cloned wazuh-docker repo
+# Existing settings…
 wazuh_repo_dest: /opt/wazuh-docker
-
-# Sub-directory for the single-node compose
 wazuh_compose_dir: "{{ wazuh_repo_dest }}/single-node"
-
-# Where the dashboard certs live under single-node
 cert_dest_dir: "{{ wazuh_compose_dir }}/config/wazuh_indexer_ssl_certs"
+
+# New: switch to self-signed
+use_self_signed_cert: true
+
+# Params for self-signed cert
+self_signed:
+  common_name: "{{ ansible_fqdn | default('localhost') }}"
+  key_size: 2048
+  cert_validity_days: 365
+  country: US
+  state: California
+  locality: ExampleCity
+  organization: MyCompany
+  organizational_unit: IT
