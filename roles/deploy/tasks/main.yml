@@ -1,5 +1,13 @@
 ---
-- name: Launch Wazuh Docker stack
-  community.docker.docker_compose_v2:
-    project_src: "{{ wazuh_repo_dest }}"
+- name: Ensure docker-compose binary is installed
+  ansible.builtin.package:
+    name: docker-compose
     state: present
+  become: true
+
+- name: Launch Wazuh Docker stack via docker-compose
+  community.docker.docker_compose:
+    project_src: "{{ wazuh_compose_dir }}"
+    state: present
+    executable: docker-compose
+  become: true
