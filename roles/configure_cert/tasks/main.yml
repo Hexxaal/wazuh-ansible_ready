@@ -7,14 +7,14 @@
 
 - block:
     - name: Generate private key for self-signed cert
-      community.crypto.openssl_privatekey:
+      community.crypto.x509_certificate_privatekey:
         path: "{{ cert_dest_dir }}/wazuh.dashboard-key.pem"
         size: "{{ self_signed.key_size }}"
         type: RSA
         mode: '0600'
 
     - name: Generate self-signed certificate
-      community.crypto.openssl_certificate:
+      community.crypto.x509_certificate:
         path: "{{ cert_dest_dir }}/wazuh.dashboard.pem"
         privatekey_path: "{{ cert_dest_dir }}/wazuh.dashboard-key.pem"
         csr_common_name: "{{ self_signed.common_name }}"
